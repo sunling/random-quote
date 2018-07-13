@@ -1,15 +1,17 @@
 const express = require('express');
-const app = express();
+const http = require('http')
 const path = require('path');
 
-app.use(express.static(__dirname+"/dist"));
-var port = process.env.PORT || 8080;
-app.listen(port);
+const app = express();
 
-//PathLocationStrategy
-app.get('/*',(req,res)=>{
-    //going to allow angular to handle our routing instead of the server
-    res.sendFile(path.join(__dirname+"/dist/index.html"));
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
 });
 
-console.log('The server is up listening port '+port);
+const port = process.env.PORT || 8080;
+app.set('port', port);
+
+const server = http.createServer(app);
+server.listen(port, () => console.log('running'));
